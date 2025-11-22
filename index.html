@@ -10,78 +10,79 @@
         :root {
             --neon-green: #39ff14;
             --neon-red: #ff073a;
+            --neon-gold: #ffd700;
+            --neon-blue: #00ffff;
             --dark-bg: #111;
             --ui-bg: rgba(20, 20, 20, 0.95);
         }
         body {
-            background-color: #111; /* Fallback */
+            background-color: #111; 
             background-color: var(--dark-bg);
             color: white;
-            font-family: 'Courier New', Courier, monospace; /* Arcade style font */
+            font-family: 'Courier New', Courier, monospace;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            touch-action: none; /* Prevents scrolling on mobile */
+            touch-action: none; 
             overflow: hidden;
         }
 
         h1 { 
-            margin: 10px 0; 
+            margin: 5px 0; 
             font-size: 28px; 
             text-shadow: 0 0 10px #39ff14;
             letter-spacing: 2px;
         }
         
         #score-board {
-            font-size: 20px;
-            margin-bottom: 15px;
+            font-size: 18px;
+            margin-bottom: 5px;
             font-weight: bold;
+            display: flex;
+            gap: 15px;
         }
 
         /* --- The Game Canvas --- */
         canvas {
-            background-color: #000;
-            /* Neon Glow Effect */
-            border: 3px solid #39ff14;
-            box-shadow: 0 0 20px #39ff14;
-            border-radius: 5px;
-            /* Responsive width for mobile */
+            background-color: #080808;
+            border: 3px solid #333;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+            border-radius: 10px;
             max-width: 95vw; 
-            max-height: 60vh;
-            image-rendering: pixelated; /* Makes visuals crisp */
+            max-height: 55vh; /* Adjusted for footer space */
         }
 
         /* --- Mobile D-Pad Controls --- */
         .controls-container {
-            margin-top: 20px;
+            margin-top: 10px;
             display: flex;
             justify-content: center;
             width: 100%;
-            padding-bottom: 20px;
+            padding-bottom: 5px;
         }
 
         .controls-grid {
             display: grid;
-            grid-template-columns: 70px 70px 70px;
-            grid-template-rows: 70px 70px;
-            gap: 10px;
+            grid-template-columns: 60px 60px 60px;
+            grid-template-rows: 60px 60px;
+            gap: 8px;
         }
 
         .btn {
             background: linear-gradient(145deg, #333, #222);
             border: 2px solid #444;
             box-shadow: 0 4px #111;
-            border-radius: 15px;
+            border-radius: 12px;
             color: #39ff14;
-            font-size: 30px;
+            font-size: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            user-select: none; /* Prevents text selection on tap */
+            user-select: none;
             transition: all 0.1s;
         }
 
@@ -98,29 +99,50 @@
         .btn-down { grid-column: 2; grid-row: 2; }
         .btn-right { grid-column: 3; grid-row: 2; }
 
-        /* --- Overlays (Start Menu & Game Over) --- */
+        /* --- Footer Credit Stylish --- */
+        .creator-text {
+            margin-top: 20px;
+            font-size: 16px;
+            font-family: 'Brush Script MT', cursive; /* Signature style font */
+            background: linear-gradient(90deg, #00ffff, #39ff14);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+            letter-spacing: 1px;
+            opacity: 0.9;
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
+            50% { text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); }
+            100% { text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
+        }
+
+        /* --- Overlays --- */
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(20, 20, 20, 0.95);
+            background: rgba(10, 10, 10, 0.98);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10; /* Ensure it's on top */
+            z-index: 10;
         }
 
-        #game-over { display: none; } /* Hidden by default */
+        #game-over { display: none; }
 
         .menu-box {
-            background: rgba(0,0,0,0.8);
+            background: rgba(20, 20, 20, 0.9);
             border: 2px solid #39ff14;
-            box-shadow: 0 0 30px #39ff14;
-            padding: 30px;
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+            padding: 20px;
             border-radius: 15px;
             text-align: center;
-            width: 80%;
-            max-width: 350px;
+            width: 85%;
+            max-width: 320px;
         }
 
         h2.neon-text {
@@ -133,9 +155,9 @@
         .menu-btn {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             margin: 10px 0;
-            font-size: 18px;
+            font-size: 16px;
             font-family: inherit;
             font-weight: bold;
             color: #111;
@@ -143,20 +165,44 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 0 10px #39ff14;
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
         }
+        
+        /* Slider Styling */
+        .speed-control {
+            margin: 15px 0;
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        
+        input[type=range] {
+            width: 100%;
+            margin-top: 10px;
+            accent-color: #39ff14;
+        }
+
+        .legend {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: flex-start;
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
         .menu-btn.easy { background: #00d2ff; box-shadow: 0 0 10px #00d2ff; }
         .menu-btn.hard { background: #ff073a; box-shadow: 0 0 10px #ff073a; color: white;}
 
-        .menu-btn:hover, .menu-btn:active {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px currentColor;
-        }
-
         #game-container {
-            display: none; /* Hidden until difficulty selected */
+            display: none;
             flex-direction: column;
             align-items: center;
         }
@@ -167,39 +213,63 @@
     <!-- START MENU SCREEN -->
     <div id="start-screen" class="overlay">
         <div class="menu-box">
-            <h1>NEON SNAKE</h1>
-            <p>Select Difficulty:</p>
-            <button class="menu-btn easy" onclick="startGame('easy')">EASY (No Walls)</button>
-            <button class="menu-btn" onclick="startGame('medium')">MEDIUM</button>
-            <button class="menu-btn hard" onclick="startGame('hard')">HARD</button>
+            <h1 style="margin-top:0">SNAKE MASTER</h1>
+            
+            <!-- Speed Slider Section -->
+            <div class="speed-control">
+                <label style="color:#fff; font-size:14px;">Speed Level: <span id="speed-val" style="color:#39ff14; font-size:18px;">3</span></label>
+                <br>
+                <input type="range" min="1" max="5" value="3" id="speed-slider" oninput="updateSpeedLabel(this.value)">
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:#666; margin-top:2px;">
+                    <span>Slow</span><span>Fast</span>
+                </div>
+            </div>
+
+            <p style="margin:5px 0; font-size:14px; color:#ccc;">Select Mode:</p>
+            
+            <button class="menu-btn easy" onclick="startGame(false)">PLAY: NO WALLS</button>
+            <button class="menu-btn hard" onclick="startGame(true)">PLAY: WITH WALLS</button>
+            
+            <div class="legend">
+                <div class="legend-item"><span class="dot" style="background:#ff073a; box-shadow: 0 0 5px red;"></span> Red Apple: +1 Point</div>
+                <div class="legend-item"><span class="dot" style="background:#ffd700; box-shadow: 0 0 5px gold;"></span> Gold Coin: +10 Points</div>
+                <div class="legend-item"><span class="dot" style="background:#00ffff; box-shadow: 0 0 5px cyan;"></span> Magic Potion: Shrinks Snake</div>
+            </div>
+            
+            <div class="creator-text">Created By : Ambuj Garg</div>
         </div>
     </div>
 
     <!-- MAIN GAME INTERFACE -->
     <div id="game-container">
-        <h1>Neon Snake</h1>
-        <div id="score-board">Score: <span id="score">0</span> | Level: <span id="level-display"></span></div>
+        <div id="score-board">
+            <span>Score: <span id="score" style="color:#39ff14">0</span></span>
+            <span>High: <span id="high-score" style="color:#ffd700">0</span></span>
+        </div>
 
         <canvas id="gameCanvas" width="320" height="320"></canvas>
 
         <!-- Mobile Controls -->
         <div class="controls-container">
             <div class="controls-grid">
-                <!-- Used Touchstart for faster response on mobile than onclick -->
                 <div class="btn btn-up" ontouchstart="changeDirection('UP'); event.preventDefault()" onmousedown="changeDirection('UP')">▲</div>
                 <div class="btn btn-left" ontouchstart="changeDirection('LEFT'); event.preventDefault()" onmousedown="changeDirection('LEFT')">◀</div>
                 <div class="btn btn-down" ontouchstart="changeDirection('DOWN'); event.preventDefault()" onmousedown="changeDirection('DOWN')">▼</div>
                 <div class="btn btn-right" ontouchstart="changeDirection('RIGHT'); event.preventDefault()" onmousedown="changeDirection('RIGHT')">▶</div>
             </div>
         </div>
+        
+        <!-- Removed Creator Text from here -->
     </div>
 
     <!-- GAME OVER SCREEN -->
     <div id="game-over" class="overlay">
         <div class="menu-box" style="border-color: #ff073a; box-shadow: 0 0 30px #ff073a;">
             <h2 class="neon-text">GAME OVER</h2>
-            <p style="font-size: 20px;">Final Score: <span id="final-score" style="color: #39ff14">0</span></p>
+            <p style="font-size: 20px;">Score: <span id="final-score" style="color: #39ff14">0</span></p>
             <button class="menu-btn" onclick="showMainMenu()">MAIN MENU</button>
+            <button class="menu-btn easy" onclick="restartSameLevel()">PLAY AGAIN</button>
+            <div class="creator-text" style="margin-top:20px;">Created By : Ambuj Garg</div>
         </div>
     </div>
 
@@ -207,46 +277,54 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const scoreEl = document.getElementById("score");
-        const levelEl = document.getElementById("level-display");
+        const highScoreEl = document.getElementById("high-score");
         const finalScoreEl = document.getElementById("final-score");
         const gameOverScreen = document.getElementById("game-over");
         const startScreen = document.getElementById("start-screen");
         const gameContainer = document.getElementById("game-container");
 
-        // Canvas dimensions
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
+        const box = 20; 
+        let canvasWidth = canvas.width;
+        let canvasHeight = canvas.height;
         
-        const box = 20; // Size of one square block
-        
-        // Game State Variables
-        let score = 0;
+        // Game State
         let snake = [];
-        let food = {};
-        let d = ""; // Direction
+        let score = 0;
+        let highScore = 0;
+        let d = ""; 
         let gameLoop;
-        let currentSpeed = 100;
         let wallsAreActive = true;
         let isGameRunning = false;
+        let currentSpeed = 100;
 
-        // Difficulty Settings Configuration
-        const difficultySettings = {
-            'easy': { speed: 160, walls: false, label: 'Easy' },
-            'medium': { speed: 100, walls: true, label: 'Medium' },
-            'hard': { speed: 60, walls: true, label: 'Hard' }
-        };
+        // Items
+        let food = { x: 0, y: 0 };
+        let bonusItem = { x: -100, y: -100, active: false, timer: 0 };
+        let magicFruit = { x: -100, y: -100, active: false, timer: 0 };
 
-        // --- Menu Functions ---
+        // Update label text when slider moves
+        function updateSpeedLabel(val) {
+            document.getElementById('speed-val').innerText = val;
+        }
 
-        // Called when a difficulty button is clicked
-        function startGame(difficulty) {
-            console.log("Game Starting: " + difficulty); // Debugging check
-            const settings = difficultySettings[difficulty];
-            currentSpeed = settings.speed;
-            wallsAreActive = settings.walls;
-            levelEl.innerText = settings.label;
+        function startGame(wallsMode) {
+            wallsAreActive = wallsMode;
             
-            // Update UI
+            // Get Speed from slider (1 to 5)
+            let speedVal = parseInt(document.getElementById('speed-slider').value);
+            
+            // Map 1-5 to Milliseconds (Lower is faster)
+            // Tweaked: Level 1 is now much slower (400ms)
+            const speedMap = {
+                1: 400, // Very Slow (Perfect for beginners)
+                2: 250, // Slow
+                3: 150, // Normal
+                4: 90,  // Fast
+                5: 50   // Super Fast
+            };
+            
+            currentSpeed = speedMap[speedVal];
+            
             startScreen.style.display = "none";
             gameOverScreen.style.display = "none";
             gameContainer.style.display = "flex";
@@ -254,51 +332,84 @@
             initGame();
         }
 
-        // Called by Game Over screen to go back to start
+        function restartSameLevel() {
+            // Just reuse current settings
+            startScreen.style.display = "none";
+            gameOverScreen.style.display = "none";
+            gameContainer.style.display = "flex";
+            initGame();
+        }
+
         function showMainMenu() {
              gameOverScreen.style.display = "none";
              gameContainer.style.display = "none";
              startScreen.style.display = "flex";
         }
 
-
-        // --- Core Game Logic ---
-
         function initGame() {
             snake = [];
-            // Start in the middle
-            snake[0] = { 
-                x: Math.floor((canvasWidth / 2) / box) * box, 
-                y: Math.floor((canvasHeight / 2) / box) * box 
-            };
+            let startX = Math.floor((canvasWidth / 2) / box) * box;
+            let startY = Math.floor((canvasHeight / 2) / box) * box;
+            snake[0] = { x: startX, y: startY };
+            snake[1] = { x: startX - box, y: startY };
+            snake[2] = { x: startX - (box*2), y: startY };
+
             score = 0;
-            d = ""; // Start stationary
+            d = "RIGHT"; 
             scoreEl.innerText = score;
             isGameRunning = true;
             
             createFood();
+            resetBonus();
+            resetMagic();
             
-            // Clear any existing loop before starting a new one
             if(gameLoop) clearInterval(gameLoop);
             gameLoop = setInterval(drawGameTick, currentSpeed);
         }
 
-        function createFood() {
-            // Generate random coordinates suitable for the grid
-            food = {
+        // --- Spawning Logic ---
+
+        function getRandomPos() {
+            return {
                 x: Math.floor(Math.random() * (canvasWidth / box)) * box,
                 y: Math.floor(Math.random() * (canvasHeight / box)) * box
             };
-            // Ensure food doesn't appear inside the snake body
-            for(let i=0; i<snake.length; i++){
-                if(food.x === snake[i].x && food.y === snake[i].y){
-                    createFood(); // Try again if it spawned on snake
-                    return;
-                }
-            }
         }
 
-        // Input Handling (Keyboard)
+        function createFood() {
+            food = getRandomPos();
+            while(isOnSnake(food)) { food = getRandomPos(); }
+        }
+
+        function spawnBonus() {
+            bonusItem = getRandomPos();
+            while(isOnSnake(bonusItem) || (bonusItem.x === food.x && bonusItem.y === food.y)) { 
+                bonusItem = getRandomPos(); 
+            }
+            bonusItem.active = true;
+            bonusItem.timer = 50; 
+        }
+
+        function spawnMagic() {
+            magicFruit = getRandomPos();
+             while(isOnSnake(magicFruit) || (magicFruit.x === food.x && magicFruit.y === food.y)) { 
+                magicFruit = getRandomPos(); 
+            }
+            magicFruit.active = true;
+            magicFruit.timer = 80; 
+        }
+
+        function resetBonus() { bonusItem.active = false; bonusItem.x = -100; }
+        function resetMagic() { magicFruit.active = false; magicFruit.x = -100; }
+
+        function isOnSnake(pos) {
+            for(let i=0; i<snake.length; i++){
+                if(pos.x === snake[i].x && pos.y === snake[i].y) return true;
+            }
+            return false;
+        }
+
+        // --- Input ---
         document.addEventListener("keydown", function(event) {
             if(!isGameRunning) return;
             let key = event.keyCode;
@@ -308,8 +419,7 @@
             if((key == 40 || key == 83) && d != "UP") d = "DOWN";
         });
 
-        // Input Handling (Mobile Buttons)
-        window.changeDirection = function(dir) { // Make global for HTML access
+        window.changeDirection = function(dir) {
             if(!isGameRunning) return;
             if (dir === "LEFT" && d !== "RIGHT") d = "LEFT";
             if (dir === "UP" && d !== "DOWN") d = "UP";
@@ -317,20 +427,36 @@
             if (dir === "DOWN" && d !== "UP") d = "DOWN";
         };
 
+        // --- Drawing & Logic ---
 
-        // --- Main Game Loop (Draws everything repeatedly) ---
         function drawGameTick() {
-            // 1. Clear background
-            ctx.fillStyle = "#111"; // Dark background
+            // 1. Background
+            ctx.fillStyle = "#111";
             ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            // Grid
+            ctx.strokeStyle = "#222";
+            ctx.lineWidth = 1;
+            for (let i = box; i < canvasWidth; i += box) {
+                 ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvasHeight); ctx.stroke();
+            }
+            for (let i = box; i < canvasHeight; i += box) {
+                 ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvasWidth, i); ctx.stroke();
+            }
 
-            // Optional: Draw subtle grid lines for style
-            drawGrid();
+            // 2. Game Logic
+            if (!bonusItem.active && Math.random() < 0.01) spawnBonus();
+            if (!magicFruit.active && Math.random() < 0.005) spawnMagic();
 
-            // 2. Draw Food (Neon Red)
-            drawFood();
+            if (bonusItem.active) {
+                bonusItem.timer--;
+                if(bonusItem.timer <= 0) resetBonus();
+            }
+            if (magicFruit.active) {
+                magicFruit.timer--;
+                if(magicFruit.timer <= 0) resetMagic();
+            }
 
-            // 3. Calculate new Head Position
             let snakeX = snake[0].x;
             let snakeY = snake[0].y;
 
@@ -339,99 +465,128 @@
             if(d == "RIGHT") snakeX += box;
             if(d == "DOWN") snakeY += box;
 
-            // 4. Handle Wall Collision based on difficulty
+            // Wall Collision
             if (wallsAreActive) {
-                // Hard/Medium Mode: Walls kill
                 if (snakeX < 0 || snakeX >= canvasWidth || snakeY < 0 || snakeY >= canvasHeight) {
-                    gameOver();
-                    return; // Stop drawing this frame
+                    gameOver(); return;
                 }
             } else {
-                // Easy Mode: Wrap around screen
                 if (snakeX < 0) snakeX = canvasWidth - box;
                 if (snakeX >= canvasWidth) snakeX = 0;
                 if (snakeY < 0) snakeY = canvasHeight - box;
                 if (snakeY >= canvasHeight) snakeY = 0;
             }
 
-            // Define new head position
             let newHead = { x: snakeX, y: snakeY };
 
-            // 5. Check Self-Collision (Snake eats body)
             if (collision(newHead, snake)) {
-                gameOver();
-                return;
+                gameOver(); return;
             }
 
-            // 6. Draw Snake
-            drawSnake();
+            let ateFood = false;
 
-            // 7. Eating Food Logic
             if(snakeX == food.x && snakeY == food.y) {
                 score++;
-                scoreEl.innerText = score;
+                ateFood = true;
                 createFood();
-                // Don't pop the tail, so snake grows
-            } else if (d !== "") {
-                // Only remove tail if moving and didn't eat
+            }
+
+            if(bonusItem.active && snakeX == bonusItem.x && snakeY == bonusItem.y) {
+                score += 10;
+                resetBonus();
+            }
+
+            if(magicFruit.active && snakeX == magicFruit.x && snakeY == magicFruit.y) {
+                if(snake.length > 3) {
+                    snake.pop();
+                    snake.pop();
+                }
+                resetMagic();
+            }
+
+            if(!ateFood) {
                 snake.pop();
             }
 
-            // Add new Head to the front of the array
-            if(d !== "") {
-                 snake.unshift(newHead);
+            scoreEl.innerText = score;
+            if(score > highScore) {
+                highScore = score;
+                highScoreEl.innerText = highScore;
             }
+
+            snake.unshift(newHead);
+
+            // 3. Drawing
+            drawOrb(food.x, food.y, "#ff073a", false);
+
+            if(bonusItem.active) {
+                let blink = (bonusItem.timer < 15 && bonusItem.timer % 4 == 0);
+                if(!blink) drawOrb(bonusItem.x, bonusItem.y, "#ffd700", true);
+            }
+
+            if(magicFruit.active) {
+                drawOrb(magicFruit.x, magicFruit.y, "#00ffff", true);
+            }
+
+            drawSnake();
         }
 
-        // Helper: Draw Grid lines
-        function drawGrid() {
-             ctx.strokeStyle = "#222";
-             ctx.lineWidth = 0.5;
-             for (let i = box; i < canvasWidth; i += box) {
-                 ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvasHeight); ctx.stroke();
-                 ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvasWidth, i); ctx.stroke();
-             }
+        function drawOrb(x, y, color, glow) {
+            ctx.fillStyle = color;
+            if(glow) {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = color;
+            } else {
+                ctx.shadowBlur = 0;
+            }
+            
+            ctx.beginPath();
+            ctx.arc(x + box/2, y + box/2, box/2 - 2, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
         }
 
-        // Helper: Stylish Food Draw
-        function drawFood() {
-             // Glow effect
-             ctx.shadowBlur = 15;
-             ctx.shadowColor = "red";
-             ctx.fillStyle = "#ff073a"; // Neon Red
-             
-             // Draw slightly smaller than box for look
-             let padding = 2;
-             ctx.fillRect(food.x + padding, food.y + padding, box - padding*2, box - padding*2);
-             
-             // Reset shadow for other elements
-             ctx.shadowBlur = 0;
-        }
-
-        // Helper: Stylish Snake Draw
         function drawSnake() {
             for(let i = 0; i < snake.length; i++) {
-                // Head color vs Body color
-                let color = (i == 0) ? "#39ff14" : "#28b410"; 
+                let x = snake[i].x;
+                let y = snake[i].y;
                 
-                // Add glow only to the head
-                if(i === 0) {
+                if(i == 0) {
+                    ctx.fillStyle = "#39ff14"; 
                     ctx.shadowBlur = 10;
-                    ctx.shadowColor = "#39ff14"; // FIXED: Replaced var() with hex code
-                } else {
-                     ctx.shadowBlur = 0;
-                }
+                    ctx.shadowColor = "#39ff14";
+                    
+                    ctx.beginPath();
+                    ctx.arc(x + box/2, y + box/2, box/2, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
 
-                ctx.fillStyle = color;
-                // Draw snake segment with slight padding so they look distinct
-                ctx.fillRect(snake[i].x + 1, snake[i].y + 1, box - 2, box - 2);
+                    ctx.fillStyle = "black";
+                    let eyeOffsetX = 0, eyeOffsetY = 0;
+                    if(d=="RIGHT") { eyeOffsetX = 5; eyeOffsetY = -3; }
+                    if(d=="LEFT")  { eyeOffsetX = -5; eyeOffsetY = -3; }
+                    if(d=="UP")    { eyeOffsetX = -3; eyeOffsetY = -5; }
+                    if(d=="DOWN")  { eyeOffsetX = -3; eyeOffsetY = 5; }
+
+                    ctx.beginPath();
+                    ctx.arc(x + box/2 + eyeOffsetX, y + box/2 + eyeOffsetY, 2, 0, Math.PI*2);
+                    ctx.fill();
+                     if(d=="RIGHT" || d=="LEFT") {
+                        ctx.beginPath(); ctx.arc(x + box/2 + eyeOffsetX, y + box/2 - eyeOffsetY, 2, 0, Math.PI*2); ctx.fill();
+                     } else {
+                        ctx.beginPath(); ctx.arc(x + box/2 - eyeOffsetX, y + box/2 + eyeOffsetY, 2, 0, Math.PI*2); ctx.fill();
+                     }
+
+                } else {
+                    ctx.fillStyle = (i%2==0) ? "#2eb82e" : "#249624";
+                    ctx.beginPath();
+                    ctx.arc(x + box/2, y + box/2, box/2 - 1, 0, Math.PI*2);
+                    ctx.fill();
+                }
             }
-             ctx.shadowBlur = 0; // Reset shadow at end
         }
 
-
         function collision(head, array) {
-            // Start checking from i=1 because i=0 is the head itself
             for(let i = 1; i < array.length; i++) {
                 if(head.x == array[i].x && head.y == array[i].y) {
                     return true;
