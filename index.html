@@ -36,14 +36,61 @@
             text-shadow: 0 0 10px #39ff14;
             letter-spacing: 2px;
         }
+
+        /* --- Game Header (Score + Buttons) --- */
+        #game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 320px; /* Matches canvas width */
+            margin-bottom: 8px;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
         
         #score-board {
-            font-size: 18px;
-            margin-bottom: 5px;
+            font-size: 16px;
             font-weight: bold;
             display: flex;
-            gap: 15px;
+            flex-direction: column; /* Stack score/high score for space */
+            gap: 2px;
         }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--neon-green);
+            transition: all 0.2s;
+        }
+        .icon-btn:active {
+            transform: scale(0.9);
+            background: var(--neon-green);
+            color: black;
+        }
+        .icon-btn.exit {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            box-shadow: 0 0 5px var(--neon-red);
+        }
+        .icon-btn.exit:active {
+            background: var(--neon-red);
+        }
+
 
         /* --- The Game Canvas --- */
         canvas {
@@ -301,9 +348,18 @@
 
     <!-- MAIN GAME INTERFACE -->
     <div id="game-container">
-        <div id="score-board">
-            <span>Score: <span id="score" style="color:#39ff14">0</span></span>
-            <span>High: <span id="high-score" style="color:#ffd700">0</span></span>
+        
+        <!-- New Header with Score & Buttons -->
+        <div id="game-header">
+            <div id="score-board">
+                <span style="color:#ccc; font-size:12px;">SCORE</span>
+                <span id="score" style="color:#39ff14; font-size:22px;">0</span>
+            </div>
+            
+            <div class="header-controls">
+                <button id="pause-btn" class="icon-btn" onclick="togglePause()">❚❚</button>
+                <button id="exit-btn" class="icon-btn exit" onclick="exitGame()">🏠</button>
+            </div>
         </div>
 
         <canvas id="gameCanvas" width="320" height="320"></canvas>
@@ -343,11 +399,11 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const scoreEl = document.getElementById("score");
-        const highScoreEl = document.getElementById("high-score");
         const finalScoreEl = document.getElementById("final-score");
         const gameOverScreen = document.getElementById("game-over");
         const startScreen = document.getElementById("start-screen");
         const gameContainer = document.getElementById("game-container");
+        const pauseBtn = document.getElementById("pause-btn");
         
         // Control Elements
         const dpadControls = document.getElementById("dpad-controls");
@@ -366,6 +422,7 @@
         let gameLoop;
         let wallsAreActive = true;
         let isGameRunning = false;
+        let isPaused = false;
         let currentSpeed = 100;
         let selectedControl = 'buttons';
 
@@ -421,6 +478,38 @@
              gameOverScreen.style.display = "none";
              gameContainer.style.display = "none";
              startScreen.style.display = "flex";
+             clearInterval(gameLoop); // Ensure stopped
+        }
+
+        function togglePause() {
+            if (!isGameRunning) return;
+            
+            if (isPaused) {
+                // Resume
+                isPaused = false;
+                pauseBtn.innerHTML = "❚❚"; // Pause icon
+                gameLoop = setInterval(drawGameTick, currentSpeed);
+            } else {
+                // Pause
+                isPaused = true;
+                pauseBtn.innerHTML = "▶"; // Play icon
+                clearInterval(gameLoop);
+                
+                // Draw "PAUSED" text overlay
+                ctx.fillStyle = "rgba(0,0,0,0.5)";
+                ctx.fillRect(0,0, canvasWidth, canvasHeight);
+                ctx.fillStyle = "white";
+                ctx.font = "30px Courier New";
+                ctx.textAlign = "center";
+                ctx.fillText("PAUSED", canvasWidth/2, canvasHeight/2);
+            }
+        }
+
+        function exitGame() {
+            isGameRunning = false;
+            isPaused = false; // Reset pause state
+            clearInterval(gameLoop);
+            showMainMenu();
         }
 
         function initGame() {
@@ -435,6 +524,8 @@
             d = "RIGHT"; 
             scoreEl.innerText = score;
             isGameRunning = true;
+            isPaused = false;
+            pauseBtn.innerHTML = "❚❚";
             
             createFood();
             resetBonus();
@@ -444,7 +535,7 @@
             gameLoop = setInterval(drawGameTick, currentSpeed);
         }
 
-        // --- Joystick Logic ---
+        // --- Joystick Logic (Mouse + Touch) ---
         function initJoystick() {
             let joystickActive = false;
 
@@ -502,7 +593,7 @@
                     resetJoystick();
                 }
             });
-
+            
             joystickArea.addEventListener('mouseleave', function(e) {
                 if (joystickActive) {
                     e.preventDefault();
@@ -588,7 +679,7 @@
 
         // --- Input ---
         document.addEventListener("keydown", function(event) {
-            if(!isGameRunning) return;
+            if(!isGameRunning || isPaused) return;
             let key = event.keyCode;
             if((key == 37 || key == 65) && d != "RIGHT") d = "LEFT";
             if((key == 38 || key == 87) && d != "DOWN") d = "UP";
@@ -597,7 +688,7 @@
         });
 
         window.changeDirection = function(dir) {
-            if(!isGameRunning) return;
+            if(!isGameRunning || isPaused) return;
             if (dir === "LEFT" && d !== "RIGHT") d = "LEFT";
             if (dir === "UP" && d !== "DOWN") d = "UP";
             if (dir === "RIGHT" && d !== "LEFT") d = "RIGHT";
@@ -685,11 +776,7 @@
             }
 
             scoreEl.innerText = score;
-            if(score > highScore) {
-                highScore = score;
-                highScoreEl.innerText = highScore;
-            }
-
+            
             snake.unshift(newHead);
 
             // 3. Drawing
