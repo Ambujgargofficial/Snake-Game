@@ -52,20 +52,22 @@
             box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
             border-radius: 10px;
             max-width: 95vw; 
-            max-height: 55vh; /* Adjusted for footer space */
+            max-height: 50vh; /* Adjusted to fit controls */
+        }
+
+        /* --- Controls Container --- */
+        .controls-wrapper {
+            height: 160px; /* Fixed height to prevent jumping */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10px;
         }
 
         /* --- Mobile D-Pad Controls --- */
-        .controls-container {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            padding-bottom: 5px;
-        }
-
         .controls-grid {
-            display: grid;
+            display: grid; /* Default display, toggled via JS */
             grid-template-columns: 60px 60px 60px;
             grid-template-rows: 60px 60px;
             gap: 8px;
@@ -99,9 +101,43 @@
         .btn-down { grid-column: 2; grid-row: 2; }
         .btn-right { grid-column: 3; grid-row: 2; }
 
+
+        /* --- Joystick Controls --- */
+        #joystick-area {
+            display: none; /* Hidden by default */
+            width: 140px;
+            height: 140px;
+            position: relative;
+        }
+
+        .joystick-base {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #39ff14;
+            border-radius: 50%;
+            position: absolute;
+            top: 0; left: 0;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2), inset 0 0 20px rgba(57, 255, 20, 0.1);
+        }
+
+        .joystick-stick {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #8aff70, #39ff14);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%); /* Center initially */
+            box-shadow: 0 0 15px #39ff14;
+            pointer-events: none; /* Allow touch on parent */
+            transition: transform 0.1s ease-out; /* Smooth return to center */
+        }
+
+
         /* --- Footer Credit Stylish --- */
         .creator-text {
-            margin-top: 20px;
+            margin-top: 10px;
             font-size: 16px;
             font-family: 'Brush Script MT', cursive; /* Signature style font */
             background: linear-gradient(90deg, #00ffff, #39ff14);
@@ -168,9 +204,9 @@
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
         }
         
-        /* Slider Styling */
-        .speed-control {
-            margin: 15px 0;
+        /* Slider & Toggle Styling */
+        .settings-group {
+            margin: 10px 0;
             background: #222;
             padding: 10px;
             border-radius: 8px;
@@ -179,7 +215,26 @@
         
         input[type=range] {
             width: 100%;
-            margin-top: 10px;
+            margin-top: 5px;
+            accent-color: #39ff14;
+        }
+
+        /* Radio Button Styling for Controls */
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        .radio-label {
+            font-size: 14px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .radio-label input {
+            margin-right: 5px;
             accent-color: #39ff14;
         }
 
@@ -215,13 +270,17 @@
         <div class="menu-box">
             <h1 style="margin-top:0">SNAKE MASTER</h1>
             
-            <!-- Speed Slider Section -->
-            <div class="speed-control">
-                <label style="color:#fff; font-size:14px;">Speed Level: <span id="speed-val" style="color:#39ff14; font-size:18px;">3</span></label>
-                <br>
+            <!-- Settings Section -->
+            <div class="settings-group">
+                <label style="color:#fff; font-size:14px;">Speed: <span id="speed-val" style="color:#39ff14; font-size:16px;">3</span></label>
                 <input type="range" min="1" max="5" value="3" id="speed-slider" oninput="updateSpeedLabel(this.value)">
-                <div style="display:flex; justify-content:space-between; font-size:10px; color:#666; margin-top:2px;">
-                    <span>Slow</span><span>Fast</span>
+                
+                <div style="margin-top: 10px; border-top: 1px solid #444; padding-top: 8px;">
+                    <label style="color:#fff; font-size:14px;">Controls:</label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="controlType" value="buttons" checked> Buttons</label>
+                        <label class="radio-label"><input type="radio" name="controlType" value="joystick"> Joystick</label>
+                    </div>
                 </div>
             </div>
 
@@ -249,17 +308,24 @@
 
         <canvas id="gameCanvas" width="320" height="320"></canvas>
 
-        <!-- Mobile Controls -->
-        <div class="controls-container">
-            <div class="controls-grid">
+        <!-- Unified Controls Container -->
+        <div class="controls-wrapper">
+            
+            <!-- 1. Button Controls (Default) -->
+            <div class="controls-grid" id="dpad-controls">
                 <div class="btn btn-up" ontouchstart="changeDirection('UP'); event.preventDefault()" onmousedown="changeDirection('UP')">▲</div>
                 <div class="btn btn-left" ontouchstart="changeDirection('LEFT'); event.preventDefault()" onmousedown="changeDirection('LEFT')">◀</div>
                 <div class="btn btn-down" ontouchstart="changeDirection('DOWN'); event.preventDefault()" onmousedown="changeDirection('DOWN')">▼</div>
                 <div class="btn btn-right" ontouchstart="changeDirection('RIGHT'); event.preventDefault()" onmousedown="changeDirection('RIGHT')">▶</div>
             </div>
+
+            <!-- 2. Joystick Controls (Hidden Default) -->
+            <div id="joystick-area">
+                <div class="joystick-base"></div>
+                <div class="joystick-stick" id="stick"></div>
+            </div>
+
         </div>
-        
-        <!-- Removed Creator Text from here -->
     </div>
 
     <!-- GAME OVER SCREEN -->
@@ -282,6 +348,11 @@
         const gameOverScreen = document.getElementById("game-over");
         const startScreen = document.getElementById("start-screen");
         const gameContainer = document.getElementById("game-container");
+        
+        // Control Elements
+        const dpadControls = document.getElementById("dpad-controls");
+        const joystickArea = document.getElementById("joystick-area");
+        const stick = document.getElementById("stick");
 
         const box = 20; 
         let canvasWidth = canvas.width;
@@ -296,6 +367,7 @@
         let wallsAreActive = true;
         let isGameRunning = false;
         let currentSpeed = 100;
+        let selectedControl = 'buttons';
 
         // Items
         let food = { x: 0, y: 0 };
@@ -310,21 +382,30 @@
         function startGame(wallsMode) {
             wallsAreActive = wallsMode;
             
-            // Get Speed from slider (1 to 5)
+            // Get Speed
             let speedVal = parseInt(document.getElementById('speed-slider').value);
-            
-            // Map 1-5 to Milliseconds (Lower is faster)
-            // Tweaked: Level 1 is now much slower (400ms)
-            const speedMap = {
-                1: 400, // Very Slow (Perfect for beginners)
-                2: 250, // Slow
-                3: 150, // Normal
-                4: 90,  // Fast
-                5: 50   // Super Fast
-            };
-            
+            const speedMap = { 1: 400, 2: 250, 3: 150, 4: 90, 5: 50 };
             currentSpeed = speedMap[speedVal];
             
+            // Get Control Type
+            const radios = document.getElementsByName('controlType');
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    selectedControl = radios[i].value;
+                    break;
+                }
+            }
+
+            // Toggle UI based on selection
+            if(selectedControl === 'joystick') {
+                dpadControls.style.display = 'none';
+                joystickArea.style.display = 'block';
+                initJoystick();
+            } else {
+                dpadControls.style.display = 'grid';
+                joystickArea.style.display = 'none';
+            }
+
             startScreen.style.display = "none";
             gameOverScreen.style.display = "none";
             gameContainer.style.display = "flex";
@@ -333,11 +414,7 @@
         }
 
         function restartSameLevel() {
-            // Just reuse current settings
-            startScreen.style.display = "none";
-            gameOverScreen.style.display = "none";
-            gameContainer.style.display = "flex";
-            initGame();
+            startGame(wallsAreActive); // Re-read settings just in case, but generally restart
         }
 
         function showMainMenu() {
@@ -367,8 +444,108 @@
             gameLoop = setInterval(drawGameTick, currentSpeed);
         }
 
-        // --- Spawning Logic ---
+        // --- Joystick Logic ---
+        function initJoystick() {
+            let joystickActive = false;
 
+            // Helper function to handle both mouse and touch movement
+            function handleMove(clientX, clientY) {
+                const rect = joystickArea.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                updateJoystickVisuals(clientX, clientY, centerX, centerY);
+            }
+
+            function resetJoystick() {
+                joystickActive = false;
+                stick.style.transform = `translate(-50%, -50%)`;
+                stick.style.left = '50%';
+                stick.style.top = '50%';
+            }
+            
+            // --- Touch Events (Mobile) ---
+            joystickArea.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                joystickActive = true;
+                let touch = e.touches[0];
+                handleMove(touch.clientX, touch.clientY);
+            }, {passive: false});
+
+            joystickArea.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (!joystickActive) return;
+                let touch = e.touches[0];
+                handleMove(touch.clientX, touch.clientY);
+            }, {passive: false});
+
+            joystickArea.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                resetJoystick();
+            });
+
+            // --- Mouse Events (Laptop/Desktop) ---
+            joystickArea.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                joystickActive = true;
+                handleMove(e.clientX, e.clientY);
+            });
+
+            joystickArea.addEventListener('mousemove', function(e) {
+                if (!joystickActive) return;
+                e.preventDefault();
+                handleMove(e.clientX, e.clientY);
+            });
+
+            joystickArea.addEventListener('mouseup', function(e) {
+                if (joystickActive) {
+                    e.preventDefault();
+                    resetJoystick();
+                }
+            });
+
+            joystickArea.addEventListener('mouseleave', function(e) {
+                if (joystickActive) {
+                    e.preventDefault();
+                    resetJoystick();
+                }
+            });
+        }
+
+        function updateJoystickVisuals(touchX, touchY, centerX, centerY) {
+            // Calculate distance from center
+            let deltaX = touchX - centerX;
+            let deltaY = touchY - centerY;
+            let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            let maxDist = 35; // Maximum radius the stick can move
+            
+            // Calculate angle
+            let angle = Math.atan2(deltaY, deltaX);
+            
+            // Clamp stick within radius
+            if (distance > maxDist) {
+                deltaX = Math.cos(angle) * maxDist;
+                deltaY = Math.sin(angle) * maxDist;
+            }
+            
+            // Move stick
+            stick.style.transform = `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px)`;
+
+            // Determine Direction (Threshold to prevent accidental rapid switching)
+            if (distance > 10) { // Deadzone
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Horizontal
+                    if (deltaX > 0) changeDirection('RIGHT');
+                    else changeDirection('LEFT');
+                } else {
+                    // Vertical
+                    if (deltaY > 0) changeDirection('DOWN');
+                    else changeDirection('UP');
+                }
+            }
+        }
+
+
+        // --- Spawning Logic ---
         function getRandomPos() {
             return {
                 x: Math.floor(Math.random() * (canvasWidth / box)) * box,
@@ -428,7 +605,6 @@
         };
 
         // --- Drawing & Logic ---
-
         function drawGameTick() {
             // 1. Background
             ctx.fillStyle = "#111";
